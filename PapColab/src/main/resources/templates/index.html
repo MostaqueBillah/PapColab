@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sentiment Analysis</title>
+</head>
+<body>
+    <h1>Sentiment Analysis</h1>
+    
+    <form id="sentimentForm">
+        <label for="inputText">Input Text:</label>
+        <input type="text" id="inputText" name="inputText" value="I like you. I love you">
+        <br>
+        <button type="button" id="analyzeButton">Analyze Sentiment</button>
+    </form>
+
+    <h2>Analysis Result:</h2>
+    <pre id="result"></pre>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.getElementById("sentimentForm");
+            const inputText = document.getElementById("inputText");
+            const analyzeButton = document.getElementById("analyzeButton");
+            const result = document.getElementById("result");
+
+            analyzeButton.addEventListener("click", async function () {
+                const input = inputText.value;
+                if (!input) {
+                    alert("Please enter some text.");
+                    return;
+                }
+
+                const response = await fetch("/analyze-sentiment", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ inputText: input }),
+});
+
+
+                if (response.ok) {
+                    const data = await response.json();
+                    result.textContent = JSON.stringify(data, null, 2);
+                } else {
+                    result.textContent = "Error analyzing sentiment.";
+                }
+            });
+        });
+    </script>
+</body>
+</html>
